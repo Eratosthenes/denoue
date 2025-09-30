@@ -142,7 +142,7 @@ Log statements only contain one `"error"` field because it is assumed that only 
 ### JObject
 A JObject is an object that implements the JObject interface. JObjects can be looked up by key, and can be printed. The following types (to be discussed below) implement the JObject interface: JPair, JArray, JGroup.
 
-A `denoue` can accept any JObject through its `Set()` method.
+A logging instance can accept any JObject through its `Set()` method.
 
 ### JPair
 A JPair is simply a key-value pair. A JPair can be created through the `SetPair` method, which can be called on either a JLog type or a JDict type. For example:
