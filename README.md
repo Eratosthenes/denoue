@@ -18,6 +18,20 @@ pkgsite >/dev/null 2>&1 &
 ```
 and navigate to http://localhost:8080 in your browser.
 
+## Why Denoue?
+
+Denoue was built out of frustration with existing logging libraries.
+
+**One log per request**. Most loggers assume you’ll emit dozens of log lines per request. Instead of doing that, Denoue collects logs into a single structured entry and prints once at the end. That means you don’t have to piece together multiple messages to understand a request—all of your messages for each request are in a single log. This makes debugging errors dramatically simpler.
+
+Even more importantly: because the expensive part of logging (printing/writing) happens after you’ve built the full response, your clients aren’t paying for it. You can respond first, then log, so you can provide virtually zero effective latency for the client.
+
+**Mutable within a request.** With Denoue you can add, update, or remove fields/messages before printing. You’re not locked into whatever you wrote at the time of logging.
+
+**Mockable by design.** Denoue exposes an entire logging interface. That means you can inject a mock or stub for a logger in your tests without having to parse log output or wrap the library yourself. Most popular loggers don’t offer this, and it can become a major hassle when testing.
+
+**Low ceremony.** Logging shouldn’t require long chains of calls or config boilerplate. Denoue gives you simple methods (Info, Warn, Error) that just... log, accepting a format string and optional arguments. For more complex functionality, user-defined logging functions can also be created.
+
 ## Features:
 - Allows the printing of log statements to be deferred until after a request has finished processing (see usage). This allows us to log more information throughout the lifetime of a request without incurring a significant performance penalty.
 - Allows log statements to be modified, removed, or appended to before they are printed.
