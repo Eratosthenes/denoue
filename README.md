@@ -35,18 +35,18 @@ and navigate to http://localhost:8080 in your browser.
 There are five data types defined in this library: JLog, JGroup, JDict, JArray, JPair. 
 
 ### JLog
-JLog is a `denoue` instance. It is instantiated with the `New()` method:
+JLog is a denoue instance. It is instantiated with the `New()` method:
 ```
 jlog := New()
 ```
 
-Alternatively, if `denoue` is being imported by another package, we can instantiate it this way: 
+Alternatively, if denoue is being imported by another package, we can instantiate it this way: 
 
 ```
 jlog := denoue.New()
 ```
 
-Once the `denoue` is created, it can log to `os.Stdout` right away by default. To log to another output stream, the `SetOutput` method can optionally be called. For example:
+Once the `denoue` logger is created, it can log to `os.Stdout` right away by default. To log to another output stream, the `SetOutput` method can optionally be called. For example:
 ```
 jlog.SetOutput(os.Stderr)
 ```
@@ -229,7 +229,7 @@ This produces the log:
 }
 ```
 
-We can also simply remove any JObject from a `denoue` using the `Pop` method:
+We can also simply remove any JObject from a `denoue` logger using the `Pop` method:
 ```
 a := NewJArray("array")
 a.Add("hello")
@@ -251,7 +251,7 @@ This prints the log statement:
 ```
 
 ### JDict
-A JDict, unlike other types, does not have a key and does not implement the JObject interface. It holds a map of JObjects. JDict is not added to a denoue directly, rather, it is created and then added as part of a JGroup. We will see this in the next section. 
+A JDict, unlike other types, does not have a key and does not implement the JObject interface. It holds a map of JObjects. JDict is not added to a denoue logger directly, rather, it is created and then added as part of a JGroup. We will see this in the next section. 
 
 Here is an example of a JDict:
 ```
@@ -285,7 +285,7 @@ This prints as:
 ```
 
 ### JGroup
-A JGroup is a JObject that has a key and takes a JDict as its value. A denoue can take any JObject, so it can accept a JGroup. For example:
+A JGroup is a JObject that has a key and takes a JDict as its value. A denoue logger can take any JObject, so it can accept a JGroup. For example:
 
 ```
 jlog := New()
@@ -331,7 +331,7 @@ This prints the log statement:
 
 ## Usage:
 
-Here is a more detailed example of a `denoue` being instantiated in a middleware function called LogMiddleware:
+Here is a more detailed example of a denoue logger being instantiated in a middleware function called LogMiddleware:
 ```
 type ReqID struct{}
 var ReqIDKey ReqID
@@ -402,4 +402,4 @@ func AuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 }
 ```
 
-This method of injecting `denoue` into middleware works as long as the `denoue` is instantiated inside the first middleware function that is executed and printed from the last function. Alternatively, one could simply instantiate `denoue` and call `defer denoue.Print()` in the same middleware function; that works as well, but with this slightly more complicated example we can see how `denoue` is extracted from the request context, and we can also see how it can start logging from within the first middleware interceptor. 
+This method of injecting a logger into middleware works as long as the logger is instantiated inside the first middleware function that is executed and printed from the last function. Alternatively, one could simply instantiate the logger and call `defer denoue.Print()` in the same middleware function; that works as well, but with this slightly more complicated example we can see how the logger is extracted from the request context, and we can also see how it can start logging from within the first middleware interceptor. 
