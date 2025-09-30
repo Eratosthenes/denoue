@@ -1,22 +1,10 @@
 # Denoue: A small package for JSON-structured logging
 
 ## About:
+
 Denoue is a structured logging library for Go that defers logging until the end of request handling.
 
 This package defines JObjects, which are objects that can be printed as JSON. See the examples section for examples of each printable type (JGroup, JDict, JArray, JPair).
-
----
-## Documentation:
-For documentation, run:
-```
-go install golang.org/x/pkgsite/cmd/pkgsite@latest
-```
-
-then run:
-```
-pkgsite >/dev/null 2>&1 &
-```
-and navigate to http://localhost:8080 in your browser.
 
 ## Why Denoue?
 
@@ -54,6 +42,20 @@ Denoue is on par with the fastest available structured loggers in Golang, and re
 | **Log an interpolated string** | ~179 ns      | 1         | One allocation for string building |
 | **Construct a New logger** | ~7 ns        | 0         | Effectively free                   |
 
+---
+## Documentation:
+For documentation, run:
+```
+go install golang.org/x/pkgsite/cmd/pkgsite@latest
+```
+
+then run:
+```
+pkgsite >/dev/null 2>&1 &
+```
+and navigate to http://localhost:8080 in your browser.
+
+---
 ## Design:
 
 There are five data types defined in this library: JLog, JGroup, JDict, JArray, JPair. 
