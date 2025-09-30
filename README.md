@@ -10,17 +10,28 @@ This package defines JObjects, which are objects that can be printed as JSON. Se
 
 Denoue was built out of frustration with existing logging libraries.
 
-**One log per request**. Most loggers assume you’ll emit dozens of log lines per request. Instead of doing that, Denoue collects logs into a single structured entry and prints once at the end. That means you don’t have to piece together multiple messages to understand a request—all of your messages for each request are in a single log. This makes debugging errors dramatically simpler.
+**One log per request**. Most loggers assume you’ll emit dozens of log lines per request. Instead of doing that, Denoue collects logs into a single structured entry and prints once at the end. That means you don’t have to piece together multiple messages to understand a request — all of your messages for each request are in one log. This makes debugging errors very straightforward.
 
-Even more importantly: because the expensive part of logging (printing/writing) happens after you’ve built the full response, your clients aren’t paying for it. You can respond first, then log, so you can provide virtually zero effective latency for the client.
+Even more importantly: because the expensive part of logging (printing/writing) happens after you’ve built and returned your response, your clients don’t pay the latency cost. You can return to the client first and then log, so logging has virtually zero effective impact on response time.
 
 **Mutable within a request.** With Denoue you can add, update, or remove fields/messages before printing. You’re not locked into whatever you wrote at the time of logging.
 
-**Mockable by design.** Denoue exposes an entire logging interface. That means you can inject a mock or stub for a logger in your tests without having to parse log output or wrap the library yourself. Most popular loggers don’t offer this, and it can become a major hassle when testing.
+**Mockable by design.** Denoue exposes a its logging interface. That means you can inject a mock or stub for a logger in your tests without having to parse log output or wrap the library yourself. Most popular loggers don’t offer this, and it can become a major hassle when testing.
 
-**Low ceremony.** Logging shouldn’t require long chains of calls or config boilerplate. Denoue gives you simple methods (Info, Warn, Error) that just... log, accepting a format string and optional arguments. For more complex functionality, user-defined logging functions can also be created.
+**Low ceremony.** Logging shouldn’t require long chains of calls or config boilerplate. Denoue gives you simple methods (`Info`, `Warn`, `Error`) that just log, with a format string and optional arguments. For more advanced needs, you can create your own logging functions with minimal effort.
 
-## Features:
+### Comparison with other loggers
+
+| Feature                 | **Denoue**                                                            | zerolog                        | slog / logrus                  |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------ | ------------------------------ |
+| **One log per request** | ✅ Collects all messages into one JSON log per request                 | ❌ Emits many lines             | ❌ Emits many lines             |
+| **Mutable logs**        | ✅ Add/update/remove fields before printing                            | ❌ Immutable once written       | ❌ Immutable once written       |
+| **Mockable interface**  | ✅ Built-in `JLogger` interface for stubs/mocks                        | ❌ No interface; must wrap      | ❌ No interface; must wrap      |
+| **Latency impact**      | ✅ Printing happens *after* response, so zero impact on client latency | ❌ Printing inline with request | ❌ Printing inline with request |
+| **API ceremony**        | ✅ Simple `Info/Warn/Error` with format args                           | ⚠️ Fluent builder chain        | ⚠️ Verbose + config heavy      |
+| **Performance**         | ✅ Zero allocs for static logs; on par with zerolog                    | ✅ Zero allocs                  | ⚠️ Higher overhead             |
+
+### Features:
 - Allows the printing of log statements to be deferred until after a request has finished processing (see usage). This allows us to log more information throughout the lifetime of a request without incurring a significant performance penalty.
 - Allows log statements to be modified, removed, or appended to before they are printed.
 - Logs are printed in valid JSON using a subset of the JSON grammar specification (only allowing strings as values).
@@ -32,7 +43,7 @@ Even more importantly: because the expensive part of logging (printing/writing) 
 - Code base is small, manageable, and well-documented.
 - Code test coverage is high.
 
-## Benchmarks:
+### Benchmarks:
 
 Denoue is on par with the fastest available structured loggers in Golang, and requires zero allocations to log a static string, e.g. `log.Info("hello world")`. It is expected that a new logger will be instantiated for each request, but this is not an expensive operation (see below).
 
