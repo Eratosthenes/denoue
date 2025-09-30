@@ -4,7 +4,7 @@
 
 Denoue is a high-performance, structured logging library for Go that defers logging until the end of request handling.
 
-This package defines JObjects, which are objects that can be printed as JSON. See the examples section for examples of each printable type (JGroup, JDict, JArray, JPair).
+Denoue is _not_ a general-purpose logger. It is designed specifically for backend services, where request-scoped logging, zero client latency, and testability matter.
 
 ## Why Denoue?
 
@@ -77,7 +77,8 @@ and navigate to http://localhost:8080 in your browser.
 ---
 ## Design:
 
-There are five data types defined in this library: JLog, JGroup, JDict, JArray, JPair. 
+There are five data types defined in this library: JLog, JGroup, JDict, JArray, JPair. See the examples section for examples of each printable type (JGroup, JDict, JArray, JPair).
+
 
 ### JLog
 JLog is a denoue instance. It is instantiated with the `New()` method:
