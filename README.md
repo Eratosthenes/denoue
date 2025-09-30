@@ -51,6 +51,8 @@ Even more importantly: because the expensive part of logging (printing/writing) 
 
 Denoue is on par with the fastest available structured loggers in Golang, and requires zero allocations to log a static string, e.g. `log.Info("hello world")`. It is expected that a new logger will be instantiated for each request, but this is not an expensive operation (see below).
 
+**Note:** These benchmarks measure only the in-process cost of formatting and setup. In real applications, the dominant cost of logging is I/O—typically measured in microseconds, not nanoseconds. Denoue preempts this issue by deferring I/O until after the client response is sent, so logging has virtually zero impact on response latency.
+
 | Operation                                                   | Time (ns/op) | Allocs/op | Notes                              |
 | ----------------------------------------------------------- | ------------ | --------- | ---------------------------------- |
 | **Log a static string** | ~78 ns       | 0         | Hot path, no allocations           |
