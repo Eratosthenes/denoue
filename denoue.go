@@ -25,10 +25,10 @@ type JLogger interface {
 	Print()
 	Reset()
 	PrettyPrint()
-	Info(format string, args ...any)
-	Warn(format string, args ...any)
+	Info(format string, args ...string)
+	Warn(format string, args ...string)
 	Error(err error)
-	Log(f LogFunc, err error, args ...any)
+	Log(f LogFunc, err error, args ...string)
 }
 
 type JLog struct {
