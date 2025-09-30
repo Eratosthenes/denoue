@@ -428,4 +428,4 @@ func AuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 }
 ```
 
-This method of injecting a logger into middleware works as long as the logger is instantiated inside the first middleware function that is executed and printed from the last function. Alternatively, one could simply instantiate the logger and call `defer denoue.Print()` in the same middleware function; that works as well, but with this slightly more complicated example we can see how the logger is extracted from the request context, and we can also see how it can start logging from within the first middleware interceptor. 
+This method of injecting a logger into middleware works as long as the logger is instantiated inside the first middleware function that is executed and printed from the last function. Alternatively, one could simply instantiate the logger and call `defer jlog.Print()` in the same middleware function; that works as well, but with this slightly more complicated example we can see how the logger is extracted from the request context, and we can also see how it can start logging from within the first middleware interceptor. 
