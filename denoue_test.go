@@ -67,6 +67,13 @@ func BenchmarkJLog_InfoWithArgsAndPrint(b *testing.B) {
 	}
 }
 
+// 7.293 ns/op	       0 B/op	       0 allocs/op
+func BenchmarkJLog_New(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = New()
+	}
+}
+
 func Test_InfoAndPrint(t *testing.T) {
 	jlog := New()
 	jlog.Info("Benchmarking JLog: hello world")
