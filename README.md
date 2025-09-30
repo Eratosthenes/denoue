@@ -30,6 +30,16 @@ and navigate to http://localhost:8080 in your browser.
 - Code base is small, manageable, and well-documented.
 - Code test coverage is high.
 
+## Benchmarks:
+
+Denoue is on par with the fastest available structured loggers in Golang, and requires zero allocations to log a static string, e.g. `log.Info("hello world")`. It is expected that a new logger will be instantiated for each request, but this is not an expensive operation (see below).
+
+| Operation                                                   | Time (ns/op) | Allocs/op | Notes                              |
+| ----------------------------------------------------------- | ------------ | --------- | ---------------------------------- |
+| **Log a static string** | ~78 ns       | 0         | Hot path, no allocations           |
+| **Log an interpolated string** | ~179 ns      | 1         | One allocation for string building |
+| **Construct a New logger** | ~7 ns        | 0         | Effectively free                   |
+
 ## Design:
 
 There are five data types defined in this library: JLog, JGroup, JDict, JArray, JPair. 
