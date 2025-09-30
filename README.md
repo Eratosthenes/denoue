@@ -2,15 +2,15 @@
 
 ## About:
 
-Denoue is a structured logging library for Go that defers logging until the end of request handling.
+Denoue is a high-performance, structured logging library for Go that defers logging until the end of request handling.
 
 This package defines JObjects, which are objects that can be printed as JSON. See the examples section for examples of each printable type (JGroup, JDict, JArray, JPair).
 
 ## Why Denoue?
 
-Denoue was built out of frustration with existing logging libraries.
+Denoue was built out of frustration with existing logging libraries. Most logging libraries assume your logger is a global singleton. That’s convenient until you want per-request context, test isolation, or multiple independent outputs. Denoue takes the opposite approach: loggers are lightweight and request-scoped by default. Combined with a built-in mockable interface, this makes logging both safer and easier to test.
 
-**One log per request**. Most loggers assume you’ll emit dozens of log lines per request. Instead of doing that, Denoue collects logs into a single structured entry and prints once at the end. That means you don’t have to piece together multiple messages to understand a request — all of your messages for each request are in one log. This makes debugging errors very straightforward.
+**One log per request**. Most loggers assume you’ll emit dozens of log lines per request. Instead of that, Denoue collects logs into a single structured entry and prints once at the end. That means you don’t have to piece together multiple messages to understand a request — all of your messages for each request are in one log. This makes debugging errors very straightforward.
 
 Even more importantly: because the expensive part of logging (printing/writing) happens after you’ve built and returned your response, your clients don’t pay the latency cost. You can return to the client first and then log, so logging has virtually zero effective impact on response time.
 
@@ -21,6 +21,8 @@ Even more importantly: because the expensive part of logging (printing/writing) 
 **Low ceremony.** Logging shouldn’t require long chains of calls or config boilerplate. Denoue gives you simple methods (`Info`, `Warn`, `Error`) that just log, with a format string and optional arguments. For more advanced needs, you can create your own logging functions with minimal effort.
 
 **Composability.** Logs are built from simple parts (`JPair`, `JArray`, `JGroup`, `JDict`) that can be added and modified independently. This makes it easy for different layers of your application to contribute structured information without conflicts.
+
+**No stdlib hijacking.** Some libraries (ahem... zerolog) shadow Go’s standard library logger by providing their own log package. Denoue doesn’t do this—it’s explicit by design. You create a logger with `denoue.New()` and pass it around. No globals, no surprises, no hijacking the standard library.
 
 ### Comparison with other loggers
 
