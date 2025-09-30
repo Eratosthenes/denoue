@@ -24,6 +24,8 @@ Even more importantly: because the expensive part of logging (printing/writing) 
 
 **No stdlib hijacking.** Some libraries (ahem... zerolog) shadow Go’s standard library logger by providing their own log package. Denoue doesn’t do this—it’s explicit by design. You create a logger with `denoue.New()` and pass it around. No globals, no surprises, no hijacking the standard library.
 
+**Zero dependencies.** Denoue is implemented entirely in the standard library. There are no external dependencies to audit, upgrade, or vendor.
+
 ### Comparison with other loggers
 
 | Feature                 | **Denoue**                                                            | zerolog                        | slog / logrus                  |
