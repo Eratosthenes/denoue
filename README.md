@@ -1,7 +1,7 @@
-# denoue: A small package for JSON-structured logging
+# Denoue: A small package for JSON-structured logging
 
 ## About:
-This is a package for JSON logging.
+Denoue is a structured logging library for Go that defers logging until the end of request handling.
 
 This package defines JObjects, which are objects that can be printed as JSON. See the examples section for examples of each printable type (JGroup, JDict, JArray, JPair).
 

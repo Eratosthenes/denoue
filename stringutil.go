@@ -3,6 +3,7 @@ package denoue
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 const DEFAULT_TIME_LAYOUT string = "2006-01-02 3:04:05.000pm Z07"
@@ -30,12 +31,12 @@ const (
 	QM string = "\""
 )
 
-func wrap(s any, tokens ...string) string {
+func wrap(s string, tokens ...string) string {
 	switch len(tokens) {
 	case 1:
-		return tokens[0] + fmt.Sprint(s) + tokens[0]
+		return tokens[0] + s + tokens[0]
 	case 2:
-		return tokens[0] + fmt.Sprint(s) + tokens[1]
+		return tokens[0] + s + tokens[1]
 	default:
 		panic("cannot parse")
 	}
@@ -84,15 +85,41 @@ func (g JGroup) String() string {
 }
 
 func (a JArray) String() string {
-	arr := ""
-	for _, val := range a.Vals {
-		arr += wrap(val, QM) + ", "
-	}
-	arr = arr[:len(arr)-2]
-	arr = wrap(arr, OB, CB)
+	var sb strings.Builder
 
-	key := wrap(a.Key, QM)
-	return fmt.Sprintf("%v: %v", key, arr)
+	sb.WriteString(wrap(a.Key, QM))
+	sb.WriteString(": ")
+	sb.WriteString(OB) // opening bracket
+
+	first := true
+	for _, val := range a.Vals {
+		if first {
+			first = false
+			sb.WriteString(wrap(val, QM))
+			continue
+		}
+		sb.WriteString(", ")
+		sb.WriteString(wrap(val, QM))
+	}
+
+	if len(a.ByteVals) > 0 {
+		for _, b := range a.ByteVals {
+			if first {
+				first = false
+				sb.WriteString(QM)
+				sb.Write(b)
+				sb.WriteString(QM)
+				continue
+			}
+			sb.WriteString(", ")
+			sb.WriteString(QM)
+			sb.Write(b)
+			sb.WriteString(QM)
+		}
+	}
+
+	sb.WriteString(CB) // closing bracket
+	return sb.String()
 }
 
 func (p JPair) String() string {

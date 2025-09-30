@@ -44,8 +44,9 @@ func (g JGroup) GetKey() string {
 // JArray values can only be strings.
 // JArrays can only be appended to, not changed.
 type JArray struct {
-	Key  string
-	Vals []string
+	Key      string
+	Vals     []string
+	ByteVals [][]byte
 }
 
 func NewJArray(key string) JArray {
@@ -56,6 +57,34 @@ func (a JArray) GetKey() string {
 	return a.Key
 }
 
+type escBuf []byte
+
+func (b *escBuf) WriteEscaped(s string) {
+	for i := 0; i < len(s); i++ {
+		if s[i] == '"' {
+			*b = append(*b, '\\')
+		}
+		*b = append(*b, s[i])
+	}
+}
+
+func MakeSafe(s string) string {
+	buf := make(escBuf, 0, 2*len(s))
+	buf.WriteEscaped(s)
+	return string(buf)
+}
+
+// AddSafe adds a formatted string and arguments to the JArray, escaping quotes.
+func (a *JArray) AddSafe(format string, args ...string) {
+	buf := make(escBuf, 0, 2*(len(format)+len(args)))
+	buf.WriteEscaped(format)
+	for _, arg := range args {
+		buf.WriteEscaped(arg)
+	}
+	a.ByteVals = append(a.ByteVals, buf)
+}
+
+// Add adds a raw string to the JArray (no escaping).
 func (a *JArray) Add(val string) {
 	a.Vals = append(a.Vals, val)
 }

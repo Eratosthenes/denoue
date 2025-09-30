@@ -11,7 +11,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"strings"
 	"sync"
 	"time"
 )
@@ -80,7 +79,7 @@ func Get[T KeyVal](j *JLog, k string) (*T, error) {
 
 	got, ok := obj.(T)
 	if !ok {
-		return nil, fmt.Errorf("could not cast object from key '%v'\n", k)
+		return nil, fmt.Errorf("could not cast object from key '%v'", k)
 	}
 	return &got, nil
 }
@@ -191,24 +190,31 @@ func (j *JLog) PrettyPrint() {
 }
 
 // Info level logging (doesn't print).
-func (j *JLog) Info(format string, args ...any) {
+func (j *JLog) Info(format string, args ...string) {
 	j.mu.Lock()
 	defer j.mu.Unlock()
 
-	msg := fmt.Sprintf(format, args...)
-	sanitizedMsg := strings.ReplaceAll(msg, "\"", "\\\"")
-	j.msgs.Add(sanitizedMsg)
+	if len(args) > 0 {
+		j.msgs.AddSafe(format, args...)
+	} else {
+		j.msgs.Add(format)
+	}
 }
 
 // Warn level logging (doesn't print).
-func (j *JLog) Warn(format string, args ...any) {
+func (j *JLog) Warn(format string, args ...string) {
 	j.mu.Lock()
 	defer j.mu.Unlock()
 
 	if j.level != ERROR {
 		j.level = WARN
 	}
-	j.msgs.Add(fmt.Sprintf(format, args...))
+
+	if len(args) > 0 {
+		j.msgs.AddSafe(format, args...)
+	} else {
+		j.msgs.Add(format)
+	}
 }
 
 // Error level logging (doesn't print).
@@ -217,16 +223,15 @@ func (j *JLog) Error(err error) {
 	defer j.mu.Unlock()
 
 	j.level = ERROR
-	sanitizedErr := strings.ReplaceAll(err.Error(), "\"", "\\\"")
-	pair := JObject(JPair{Key: ERR_KEY, Val: sanitizedErr})
+	pair := JObject(JPair{Key: ERR_KEY, Val: MakeSafe(err.Error())})
 	j.objects[pair.GetKey()] = pair
 }
 
 // LogFunc returns level, messages, objects
-type LogFunc func(err error, args ...any) (string, []string, []JObject)
+type LogFunc func(err error, args ...string) (string, []string, []JObject)
 
 // Log executes a custom logging function.
-func (j *JLog) Log(f LogFunc, err error, args ...any) {
+func (j *JLog) Log(f LogFunc, err error, args ...string) {
 	j.mu.Lock()
 	defer j.mu.Unlock()
 

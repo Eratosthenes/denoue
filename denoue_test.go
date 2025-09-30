@@ -40,7 +40,7 @@ func BenchmarkJLog_NewInfoAndPrint(b *testing.B) {
 	}
 }
 
-// BenchmarkJLog_Print-12          656178441                1.826 ns/op           0 B/op          0 allocs/op
+// 2.085 ns/op	       0 B/op	       0 allocs/op
 func BenchmarkJLog_Print(b *testing.B) {
 	jlog := New()
 	jlog.Info("Benchmarking JLog: hello world")
@@ -49,11 +49,20 @@ func BenchmarkJLog_Print(b *testing.B) {
 	}
 }
 
-// BenchmarkJLog_InfoAndPrint-12            6813304               194.3 ns/op           129 B/op          1 allocs/op
+// 77.75 ns/op	      84 B/op	       0 allocs/op
 func BenchmarkJLog_InfoAndPrint(b *testing.B) {
 	jlog := New()
 	for i := 0; i < b.N; i++ {
 		jlog.Info("Benchmarking JLog: hello world")
+		jlog.Print()
+	}
+}
+
+// 179.2 ns/op	     185 B/op	       1 allocs/op
+func BenchmarkJLog_InfoWithArgsAndPrint(b *testing.B) {
+	jlog := New()
+	for i := 0; i < b.N; i++ {
+		jlog.Info("Benchmarking JLog: %s world", "hello")
 		jlog.Print()
 	}
 }
@@ -327,7 +336,7 @@ func ExampleJLog_Log() {
 	jlog.Info("some info")
 	jlog.Error(errors.New("this is an error"))
 
-	f := func(err error, args ...any) (string, []string, []JObject) {
+	f := func(err error, args ...string) (string, []string, []JObject) {
 		var level string
 		if errors.Is(err, errTest) {
 			level = WARN
