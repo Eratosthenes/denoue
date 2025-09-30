@@ -16,7 +16,7 @@ Even more importantly: because the expensive part of logging (printing/writing) 
 
 **Mutable within a request.** With Denoue you can add, update, or remove fields/messages before printing. You’re not locked into whatever you wrote at the time of logging.
 
-**Mockable by design.** Denoue exposes a its logging interface. That means you can inject a mock or stub for a logger in your tests without having to parse log output or wrap the library yourself. Most popular loggers don’t offer this, and it can become a major hassle when testing.
+**Mockable by design.** Denoue exposes its logging interface. That means you can inject a mock or stub for a logger in your tests without having to parse log output or wrap the library yourself. Most popular loggers don’t offer this, and it can become a major hassle when testing.
 
 **Low ceremony.** Logging shouldn’t require long chains of calls or config boilerplate. Denoue gives you simple methods (`Info`, `Warn`, `Error`) that just log, with a format string and optional arguments. For more advanced needs, you can create your own logging functions with minimal effort.
 
