@@ -20,6 +20,8 @@ Even more importantly: because the expensive part of logging (printing/writing) 
 
 **Low ceremony.** Logging shouldn’t require long chains of calls or config boilerplate. Denoue gives you simple methods (`Info`, `Warn`, `Error`) that just log, with a format string and optional arguments. For more advanced needs, you can create your own logging functions with minimal effort.
 
+**Composability.** Logs are built from simple parts (`JPair`, `JArray`, `JGroup`, `JDict`) that can be added and modified independently. This makes it easy for different layers of your application to contribute structured information without conflicts.
+
 ### Comparison with other loggers
 
 | Feature                 | **Denoue**                                                            | zerolog                        | slog / logrus                  |
