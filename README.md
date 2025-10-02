@@ -1,5 +1,9 @@
 # Denoue: A small package for JSON-structured logging
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/Eratosthenes/denoue.svg)](https://pkg.go.dev/github.com/Eratosthenes/denoue)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Eratosthenes/denoue)](https://goreportcard.com/report/github.com/Eratosthenes/denoue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 ## About:
 
 Denoue is a high-performance, structured logging library for Go that defers logging until the end of request handling.
